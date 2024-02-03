@@ -1,0 +1,12 @@
+:root {
+  --font-size-text: 14px;
+  --font-size-sm: 12px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-xxl: 24px;
+  --font-size-xxxl: 32px;
+  --font-size-xxxxl: 48px;
+  --font-size-xxxxxl: 64px;
+  --font-size-xxxxxxl: 96px;
+}
