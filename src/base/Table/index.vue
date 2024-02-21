@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, onMounted, ref, nextTick,  } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import Sortable from 'sortablejs';
 
 interface paginationRaw {
@@ -112,7 +112,7 @@ onMounted(() => {
       v-if="options.pagination && options.pagination.show"
       class="pages">
       <div class="total">
-        共 <span>{{ options.pagination.total }}</span> 条
+        共 <span>{{ options.pagination.total }} </span> 条
       </div>
       <el-pagination
         :hide-on-single-page="options.pagination.total <= options.pagination.pages.pageSize"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import { type RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -30,7 +29,7 @@ const push = () => {
   <div
     @click="push"
     class="sc-sub-menu-item">
-    <el-icon v-if="subRoute?.meta.icon">
+    <el-icon v-if="subRoute?.meta?.icon">
       <component :is="subRoute?.meta.icon"></component>
     </el-icon>
     <el-menu-item

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
 import ScForm from '@/base/Form/index.vue'
 import { type itemsRaw } from '@/base/Form/types'
 import {
@@ -10,17 +9,25 @@ interface Props {
   items: itemsRaw[],
   form: any
 }
-const emit = defineEmits(['search'])
+const emit = defineEmits(['search', 'change'])
 // 派发搜索
 const search = () => {
   emit('search', props.form)
+}
+// 表单改变
+const change = (label: string, value: any) => {
+  emit('change', label, value)
 }
 const props = defineProps<Props>()
 </script>
 <template>
   <div class="query_collection">
     <div class="form">
-      <sc-form :form=form :items="items"></sc-form>
+      <sc-form
+        @change="change"
+        :form=form
+        :items="items">
+      </sc-form>
     </div>
     <div class="operate">
       <el-button @click="search" type="primary" :icon="Search"  />

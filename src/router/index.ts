@@ -13,42 +13,52 @@ const arr = [
       title: '系统管理'
     },
     children: [{
-      path: 'user',
-      name: 'user',
-      component: () => User,
+      path: 'auth',
+      name: 'auth',
       meta: {
-        title: '用户管理',
-      }
-    }, {
-      path: 'roles',
-      name: 'roles',
-      component: () => Roles,
-      meta: {
-        title: '角色管理',
-      }
-    }, {
-      path: 'test',
-      name: 'test',
-      component: () => Test,
-      meta: {
-        title: '测试'
-      }
-    }, {
-      path: 'organization',
-      name: 'organization',
-      component: () => Organization,
-      meta: {
-        title: '组织机构',
-        hidden: true
-      }
-    }],
+        title: '权限管理'
+      },
+      children: [{
+        path: 'user',
+        name: 'user',
+        component: () => User,
+        meta: {
+          title: '用户管理',
+        }
+      }, {
+        path: 'roles',
+        name: 'roles',
+        component: () => Roles,
+        meta: {
+          title: '角色管理',
+        }
+      }, {
+        path: 'test',
+        name: 'test',
+        component: () => Test,
+        meta: {
+          title: '测试'
+        }
+      }, {
+        path: 'organization',
+        name: 'organization',
+        component: () => Organization,
+        meta: {
+          title: '组织机构',
+          hidden: true
+        }
+      }],
+    }]
   }]
   
 export const constantRoutes = [{
   path: '/:404*',
   name: '404',
-  hidden: true,
-  component: () => import('../views/404.vue')
+  component: () => import('../views/404.vue'),
+  meta: {
+    title: '404',
+    hidden: true,
+  }
 }]
 export const asyncComponent:any[] = arr
 

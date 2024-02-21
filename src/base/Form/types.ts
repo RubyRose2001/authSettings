@@ -2,7 +2,7 @@
 export interface itemsRaw {
   key: string,
   label: string,
-  value?: string,
+  value?: any,
   placeholder?: string,
   type: string,
   inputType?: string,

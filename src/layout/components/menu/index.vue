@@ -21,7 +21,7 @@ watch(tabStore, (store) => {
     <el-menu
       :default-active="fullPath"
       class="el-menu-vertical-demo">
-      <template 
+      <template
         v-for="route in store.currentRouter"
         :key="route.path">
         <sc-sub-side-menu

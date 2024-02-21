@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Intcp from './http.intcp';
-
+console.log(import.meta.env.VITE_API_URL)
 export const instance = axios.create({
-  baseURL: '/',
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 1000,
   headers: {
     "content-type": "application/json"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 
 interface RouteRecordRawPlus extends Omit<RouteRecordRaw, 'children'>  {

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, type Ref, reactive } from 'vue'
 import { editUserRules } from './js/rules'
+import { formObjFn } from '@/utils/dataConversion'
+import { getDeptList, addDept } from '@/api/user'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import ScButton from '@/base/Button/index.vue'
 import ScQueryCollection from '@/base/QueryCollection/index.vue'
@@ -8,12 +10,6 @@ import ScTable from '@/base/Table/index.vue'
 import ScDialog from '@/base/Dialog/index.vue'
 import ScForm from '@/base/Form/index.vue'
 
-const formObjFn = (items) => {
-  return items.reduce((obj, item) => {
-    obj[item.key] = item.value || ''
-    return obj
-  }, {})
-}
 // 定义树节点的接口
 interface NodeData {
   id: number;
@@ -57,30 +53,34 @@ const treeData = ref<NodeData[]>([
 const items = [
   {
     label: '部门名称',
-    key: 'department',
+    key: 'deptName',
     type: 'input',
     placeholder: '请输入部门名称',
     value: ''
   },
   {
     label: '部门状态',
-    key: 'departmentStatus',
+    key: 'status',
     type: 'select',
     placeholder: '请选择部门状态',
     options: [
       {
+        label: '全部',
+        value: ''
+      },
+      {
         label: '正常',
-        value: '1'
+        value: 0
       },
       {
         label: '停用',
-        value: '2'
+        value: 1
       }
     ],
     value: ''
   },
 ]
-const options = ref({
+const options = {
   rowKey: 'id',
   columns: [
     {
@@ -100,7 +100,7 @@ const options = ref({
     label: '操作',
     show: true,
   }
-})
+}
 // tree结构 包含节点id
 const data = [
   {
@@ -141,53 +141,90 @@ const data = [
 const itemsAddUser = [
   {
     label: '部门名称',
-    key: 'department',
+    key: 'deptName',
     type: 'input',
     placeholder: '请输入公司编号',
     value: ''
   },
   {
     label: '上级部门',
-    key: 'parentDepartment',
+    key: 'parentId',
     type: 'slot',
     placeholder: '请选择用户性别',
+    value: 201
+  },
+  {
+    label: '显示顺序',
+    key: 'orderNum',
+    type: 'input',
+    inputType: 'number',
+    placeholder: '请输入显示顺序',
     value: ''
   },
   {
     label: '部门状态',
-    key: 'departmentStatus',
+    key: 'status',
     type: 'radio',
     placeholder: '',
-    value: '1',
+    value: '0',
     options: [
       {
         label: '正常',
-        value: '1'
+        value: '0'
       },
       {
         label: '停用',
-        value: '2'
+        value: '1'
       }
     ]
   },
 ]
-const tableOptions = ref(options)
-const form = ref(formObjFn(items))
+const tableOptions = options
+const form = reactive(formObjFn(items))
 const showAddOrg: Ref<boolean> = ref(false)
 const showSortOrg: Ref<boolean> = ref(false)
 const showPreOrg: Ref<boolean> = ref(false)
-const formAddOrg = ref(formObjFn(itemsAddUser))
-const itemsAddOrg = ref(itemsAddUser)
+const ruleFormRef = ref()
+const formAddOrg = reactive(formObjFn(itemsAddUser))
 const rule = reactive(editUserRules)
 const addOrg = () => {
   showAddOrg.value = true
 }
+const getDeptListApi = async () => {
+  try {
+    const res = await getDeptList(form)
+    console.log(res)
+  } catch (error) {
+    console.log(error)
+  }
+}
+const addDeptApi = async () => {
+  try {
+    await addDept(formAddOrg)
+    showAddOrg.value = false
+    getDeptListApi()
+  } catch (error) {
+    console.log(error)
+  }
+}
 const sortOrg = () => {
-  console.log('sortOrg')
   showSortOrg.value = true
 }
-const addUserConfirm = () => {
-  console.log('addUserConfirm')
+const addUserConfirm = async () => {
+  if (!ruleFormRef.value.ruleFormRef) return
+  try {
+    await ruleFormRef.value.ruleFormRef.validate()
+    addDeptApi()
+  } catch (error) {
+    console.log(error)
+  }
+}
+const change = (key: string, value: any) => {
+  form[key] = value
+  console.log(form)
+}
+const changeOrg = (key: string, value: any) => {
+  formAddOrg[key] = value
 }
 // 找到并移动节点的函数
 const moveNode = (arr: NodeData[], from: NodeData, to: NodeData, type: 'before' | 'after' | 'inner') => {
@@ -237,12 +274,19 @@ const handleNodeDrop = (draggingNode: Node, dropNode: Node, dropType: 'before' |
 const selectOrg = () => {
   showPreOrg.value = true
 }
+
+getDeptListApi()
 </script>
 <template>
   <div class="sc_organization">
     <!-- 查询 -->
     <div class="sc_organization_search">
-      <sc-query-collection :form=form :items="items"></sc-query-collection>
+      <sc-query-collection
+        @search="getDeptListApi"
+        @change="change"
+        :form=form
+        :items="items">
+      </sc-query-collection>
         <div class="btns">
           <sc-button
             @click="addOrg"
@@ -279,10 +323,12 @@ const selectOrg = () => {
       <sc-form
         ref="ruleFormRef"
         :form="formAddOrg"
-        :items="itemsAddOrg"  
+        :items="itemsAddUser"
+        :rowsNumber="2"
+        @change="changeOrg"
         :rules="rule">
-        <!-- parentDepartment -->
-        <template #parentDepartment="{ form, item }">
+        <!-- parentId -->
+        <template #parentId="{ item }">
           <el-form-item
             :key="item.key"
             :prop="item.key"
@@ -290,7 +336,7 @@ const selectOrg = () => {
             <div class="sc-org-input">
               <div @click="selectOrg"></div>
               <el-input
-                v-model="form[item.key]"
+                v-model="formAddOrg[item.key]"
                 :disabled="true"
                 :placeholder="item.placeholder">
               </el-input>

@@ -31,7 +31,6 @@ const leaveSide = () => {
   <div class="hx-layout">
     <div class="hx-layout__header">
       <div class="hx-layout__logo">
-        {{ store.keepAliveNames }}
         <img
           class="logo"
           src="@/assets/images/logo/logo.png" alt="logo" />

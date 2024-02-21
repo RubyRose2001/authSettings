@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { RouteRecordRaw } from 'vue-router'
-import { computed, defineProps, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { resolveRoutePath } from '@/utils/path'
 import ScSubMenu from './ScSubMenu.vue'
 import ScSubMenuItem from './ScSubMenuItem.vue'
@@ -44,7 +44,7 @@ const handlePath = (path) => {
 <template>
   <component
     :is="menuType"
-    v-if="subRoute.meta && !subRoute.meta.hidden"
+    v-if="!subRoute.meta?.hidden"
     :subRoute="subRoute"
     :full-path="fullPath"
     :route-children="routeChildren">

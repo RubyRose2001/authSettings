@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { defineProps, reactive, ref, defineExpose } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import { ref } from 'vue'
+import type { FormInstance } from 'element-plus'
 import ScInput from './component/Input.vue'
 import ScSelect from './component/Select.vue'
 import ScRadio from './component/Radio.vue'
 import { type itemsRaw } from './types'
-
+// xs < 768px
+// sm >= 768px
+// md >= 992px
+// lg >= 1200px
+// xl >= 1920px
 interface Props {
   items: itemsRaw[],
   form: any,
   rules?: any,
+  rowsNumber?: number,
 }
 const props = defineProps<Props>()
 
 const ruleFormRef = ref<FormInstance>()
-
+const span = 24 /  (props.rowsNumber || 3)
+const emit = defineEmits(['change'])
+const change = (label: string, value: any) => {
+  emit('change', label, value)
+}
 defineExpose({
   ruleFormRef
 })
@@ -28,32 +37,41 @@ defineExpose({
       label-width="100px"
       :model="form"
       :rules="rules">
-      <template
-        v-for="item in items"
-        :key="item.key">
-        <div
-          v-if="item.type != 'slot'"
-          class="sc-item">
-          <sc-input
-            :form="form"
-            :item="item"
-            v-if="item.type == 'input'" />
-          <sc-select
-            :form="form"
-            :item="item"
-            v-else-if="item.type == 'select'" />
-          <sc-radio
-            :form="form"
-            :item="item"
-            v-else-if="item.type == 'radio'" />
-        </div>
-        <slot
-          v-else
-          :form="form"
-          :name="item.key"
-          :item="item">
-        </slot>
-      </template>
+      <el-row>
+        <template
+          v-for="item in items"
+          :key="item.key">
+          <el-col
+            :span="span"
+            v-if="item.type != 'slot'">
+              <sc-input
+                :label="item.key"
+                :value="form[item.key]"
+                @change="change"
+                :item="item"
+                v-if="item.type == 'input'" />
+              <sc-select
+                :label="item.key"
+                :value="form[item.key]"
+                @change="change"
+                :item="item"
+                v-else-if="item.type == 'select'" />
+              <sc-radio
+                :label="item.key"
+                :value="form[item.key]"
+                @change="change"
+                :item="item"
+                v-else-if="item.type == 'radio'" />
+          </el-col>
+          <slot
+            v-else
+            :name="item.key"
+            :label="item.key"
+            :value="item.value"
+            :item="item">
+          </slot>
+        </template>
+      </el-row>
     </el-form>
   </div>
 </template>
@@ -67,6 +85,9 @@ defineExpose({
   :deep(.el-form-item__content) {
     width: @item_width;
     margin-right: 20px;
+  }
+  :deep(.el-row) {
+    width: 100%;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineEmits, ref, watch } from 'vue'
 import ScButton from './component/Button.vue'
 interface Props {
   title?: string,

@@ -1,13 +1,27 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { ref } from 'vue'
 import { type itemsRaw } from '../types'
+import { watch } from 'vue';
 
 interface Props {
   item: itemsRaw,
-  form: any
+  value: any,
+  label: string,
 }
-defineProps<Props>()
+const emit = defineEmits(['change'])
+const props = defineProps<Props>()
+const val = ref(props.value)
 
+watch(val, (v) => {
+  if (props.item.inputType === 'number' && v !== '') {
+    emit('change', props.label, +v)
+    return
+  }
+  emit('change', props.label, v)
+})
+watch(() => props.value, (v) => {
+  val.value = v
+})
 </script>
 
 <template>
@@ -16,7 +30,7 @@ defineProps<Props>()
     :prop="item.key"
     :label="item.label">
     <el-input
-      v-model="form[item.key]"
+      v-model.trim="val"
       :type="item.inputType || 'text'"
       v-if="item.type === 'input'"
       :placeholder="item.placeholder"/>

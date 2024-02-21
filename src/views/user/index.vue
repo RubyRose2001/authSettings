@@ -2,6 +2,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { addUserRules } from './js/rules'
+import { formObjFn } from '@/utils/dataConversion'
 import ScButton from '@/base/Button/index.vue'
 import ScQueryCollection from '@/base/QueryCollection/index.vue'
 import ScTable from '@/base/Table/index.vue'
@@ -14,12 +15,7 @@ interface Tree {
   label: string
   children?: Tree[]
 }
-const formObjFn = (items) => {
-  return items.reduce((obj, item) => {
-    obj[item.key] = item.value || ''
-    return obj
-  }, {})
-}
+
 const ruleFormRef = ref()
 
 const items = [
@@ -52,6 +48,13 @@ const itemsAddUser = [
     key: 'username',
     type: 'input',
     placeholder: '请输入公司编号',
+    value: ''
+  },
+  {
+    label: '排序',
+    key: 'sort',
+    type: 'input',
+    placeholder: '请输入排序',
     value: ''
   },
   {
@@ -197,7 +200,7 @@ const options = {
     label: '操作',
     show: true,
   },
-  pagination: ref({
+  pagination: reactive({
     show: true,
     total: 100,
     pages: {
@@ -265,14 +268,15 @@ const addUserConfirm = async () => {
     console.log(error)
   }
 }
-const sortDep = () => {
-  showSortDep.value = true
+const formChange = (key: string, value: any) => {
+  formAddUser.value[key] = value
 }
+
 const sortChange = (data: any) => {
   data.value = data
 }
 const goEdit = () => {
-  router.push('/settings/organization')
+  router.push('/settings/auth/organization')
 }
 router
 </script>
@@ -300,14 +304,14 @@ router
           +新增
         </sc-button>
         <sc-button type="danger" class="btn">删除</sc-button>
-        <sc-button type="import" class="btn">导入</sc-button>
-        <sc-button type="export" class="btn">导出</sc-button>
-        <sc-button
+        <!-- <sc-button type="import" class="btn">导入</sc-button>
+        <sc-button type="export" class="btn">导出</sc-button> -->
+        <!-- <sc-button
           @click="sortDep"
           type="sort"
           class="btn">
           排序
-        </sc-button>
+        </sc-button> -->
       </div>
       <div class="setting_user_table">
         <sc-table
@@ -332,32 +336,34 @@ router
       v-model="showAddUser">
       <sc-form
         ref="ruleFormRef"
+        :rowsNumber="2"
+        @change="formChange"
         :form="formAddUser"
         :items="itemsAddUser"
         :rules="rules">
         <!-- status -->
-        <template #status="{ form, item }">
+        <template #status="{ item }">
           <el-form-item
             class="mb-0"
             :key="item.key"
             :prop="item.key"
             :label="item.label">
             <el-switch
-              v-model="form[item.key]"
+              v-model="formAddUser[item.key]"
               class="ml-2"
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
             />
           </el-form-item>
         </template>
         <!-- remark -->
-        <template #remark="{ form, item }">
+        <template #remark="{ item }">
           <el-form-item
             class="mb-0"
             :key="item.key"
             :prop="item.key"
             :label="item.label">
             <el-input
-              v-model="form[item.key]"
+              v-model="formAddUser[item.key]"
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 6 }" />
           </el-form-item>
@@ -408,6 +414,7 @@ router
     display: flex;
     flex-direction: column;
     .btns {
+      margin-bottom: 15px;
       .btn {
         display: inline-block;
         margin-right: 20px;

@@ -12,7 +12,7 @@ export const addUserRules = {
     { required: true, message: 'Please input name', trigger: 'blur' },
     { min: 3, max: 20, message: 'Length should be 3 to 20', trigger: 'blur' }
   ],
-  department: [
+  deptName: [
     { required: true, message: 'Please input department', trigger: 'blur' }
   ],
   post: [
@@ -27,11 +27,15 @@ export const addUserRules = {
 
 export const editUserRules = {
   // 部门名称
-  department: [
-    { required: true, message: 'Please input department', trigger: 'blur' }
+  deptName: [
+    { required: true, message: '请输入部门名称', trigger: 'blur' }
   ],
   // 上级部门
-  parentDepartment: [
-    { required: true, message: 'Please input parent department', trigger: 'blur' }
+  parentId: [
+    { required: true, message: '请选择上级部门', trigger: 'blur' }
   ],
+  // 显示顺序
+  orderNum: [
+    { required: true, message: '请输入显示顺序', trigger: 'blur' }
+  ]
 }
