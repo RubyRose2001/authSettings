@@ -140,6 +140,7 @@ onMounted(() => {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
     & span {
       color: red;

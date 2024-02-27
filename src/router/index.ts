@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { User, Roles, Organization, Test } from './export'
+import { User, Roles, Organization, Test, TreeNode } from './export'
 import Layout from '@/layout/index.vue'
 import { asyncModules } from '@/utils/asyncModules'
 const arr = [
@@ -19,38 +19,53 @@ const arr = [
         title: '权限管理'
       },
       children: [{
-        path: 'user',
-        name: 'user',
-        component: () => User,
+        path: 'TreeNode',
+        name: 'TreeNode',
+        component: () => TreeNode,
         meta: {
-          title: '用户管理',
+          title: 'TreeNode',
         }
-      }, {
-        path: 'roles',
-        name: 'roles',
-        component: () => Roles,
-        meta: {
-          title: '角色管理',
-        }
-      }, {
-        path: 'test',
-        name: 'test',
-        component: () => Test,
-        meta: {
-          title: '测试'
-        }
-      }, {
-        path: 'organization',
-        name: 'organization',
-        component: () => Organization,
-        meta: {
-          title: '组织机构',
-          hidden: true
-        }
-      }],
+      }]
     }]
-  }]
-  
+    // children: [{
+    //   path: 'auth',
+    //   name: 'auth',
+    //   meta: {
+    //     title: '权限管理'
+    //   },
+    //   children: [{
+    //     path: 'user',
+    //     name: 'user',
+    //     component: () => User,
+    //     meta: {
+    //       title: '用户管理',
+    //     }
+    //   }, {
+    //     path: 'roles',
+    //     name: 'roles',
+    //     component: () => Roles,
+    //     meta: {
+    //       title: '角色管理',
+    //     }
+    //   }, {
+    //     path: 'test',
+    //     name: 'test',
+    //     component: () => Test,
+    //     meta: {
+    //       title: '测试'
+    //     }
+    //   }, {
+    //     path: 'organization',
+    //     name: 'organization',
+    //     component: () => Organization,
+    //     meta: {
+    //       title: '组织机构',
+    //       hidden: true
+    //     }
+    //   }],
+    // }]
+  }
+]
 export const constantRoutes = [{
   path: '/:404*',
   name: '404',

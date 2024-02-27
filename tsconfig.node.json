@@ -6,7 +6,8 @@
     "cypress.config.*",
     "nightwatch.conf.*",
     "playwright.config.*",
-    "typings/*.d.ts"
+    "typings/*.d.ts",
+    "src/**/*",
   ],
   "compilerOptions": {
     "composite": true,

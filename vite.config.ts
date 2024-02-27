@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import path from 'path'
+import fs from 'fs'
 // 按需导入 start
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -20,18 +21,20 @@ import vue from '@vitejs/plugin-vue'
 
 // 预演
 // import plu from './vite-plugin-dynamic-config.js'
-// import * as RouterModules from './src/router/export.ts'
-// import StoreModules from './src/stores/index.ts'
+import RouterModules from './src/router/put'
 // 获取pakeage.json name
 import { name } from './package.json'
-
+function resolve (dir) {
+  return fileURLToPath(new URL(`./${dir}`, import.meta.url))
+}
 const pathSrc = path.resolve(__dirname, 'typings')
-// console.log(name, RouterModules)
-// 遍历路由RouterModules
-// RouterModules.forEach((item) => {
-//   console.log(item)
-// })
-// https://vitejs.dev/config/
+const exposes = {}
+const RouterModulesKeys = Object.keys(RouterModules)
+RouterModulesKeys.forEach((key) => {
+  const src = RouterModules[key].replace(/^@\//, resolve('src') + '/')
+  exposes[`./${key}`] = src
+})
+console.log(exposes, 1234567)
 export default defineConfig(({ mode }) => {
   console.log(mode, 1234567)
   return {
@@ -43,7 +46,7 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
+        '@': resolve('src')
       }
     },
     plugins: [
@@ -51,9 +54,6 @@ export default defineConfig(({ mode }) => {
       AutoImport({
         resolvers: [
           ElementPlusResolver(),
-          IconsResolver({
-            prefix: 'Icon',
-          }),
         ],
         dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
       }),
@@ -63,7 +63,9 @@ export default defineConfig(({ mode }) => {
           IconsResolver({
             enabledCollections: ['ep'],
           }),
-          ElementPlusResolver(),
+          ElementPlusResolver({
+            noStylesComponents: ['ElTreeNode']
+          }),
         ],
         dts: path.resolve(pathSrc, 'components.d.ts'),
       }),
@@ -74,9 +76,9 @@ export default defineConfig(({ mode }) => {
         name,
         filename: "remoteEntry.js",
         exposes: {
-          "./roles": '@/views/roles/index.vue',
-          "./test": '@/views/user/test.vue',
-          "./user": '@/views/user/index.vue'
+          './store': './src/stores/index.ts',
+          './asyncComponent': './src/router/asyncComponent.ts',
+          ...exposes,
         },
         shared: ["vue", "vue-router", "element-plus", "@element-plus/icons-vue", "pinia"],
       })

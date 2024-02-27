@@ -8,5 +8,6 @@ declare global {
   const ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
   const ElCollapseTransition: typeof import('element-plus/es')['ElCollapseTransition']
   const ElInput: typeof import('element-plus/es')['ElInput']
+  const ElTooltip: typeof import('element-plus/es')['ElTooltip']
   const ElTreeNode: typeof import('element-plus/es')['ElTreeNode']
 }

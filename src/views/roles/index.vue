@@ -276,7 +276,7 @@ const addRolesChange = (key: string, value) => {
           <sc-button
             @click="addRoles"
             class="btn">
-            +新增
+            +新增1
           </sc-button>
           <!-- <sc-button type="import" class="btn">导入</sc-button>
           <sc-button type="export" class="btn">导出</sc-button> -->
